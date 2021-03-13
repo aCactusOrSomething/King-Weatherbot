@@ -1,0 +1,23 @@
+{
+  "name": "King-Weatherbot",
+  "version": "1.0.0",
+  "description": "A discord bot which randomly incinerates server members.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aCactusOrSomething/King-Weatherbot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aCactusOrSomething/King-Weatherbot/issues"
+  },
+  "homepage": "https://github.com/aCactusOrSomething/King-Weatherbot#readme",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  }
+}
