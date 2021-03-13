@@ -1,0 +1,3 @@
+PREFIX=!
+TOKEN=PutTheBotTokenHere
+EFFECT_CHANCE=0.05
