@@ -7,3 +7,24 @@ TODO, on the bot side of things:
     CORY can petrify users for sending messages in this channel, which gradually increases the slowmode.
     Each petrification also slows down the rate CORY posts at in the channel.
 5. proper webpage
+
+POTENTIAL COMMANDS:
+-help {command}: help text for commands.
+-about: an explanation of CORY.
+-settings {[name, value]}: displays the config settings for the current server. Allows changing settings if you have high enough permissions.
+-umbrella: toggles immunity to CORY's shenanigans - the bot will still respond to prefixed commands, but will not do other things.
+-setup: a guide to help bot technicians get CORY going.
+
+WEATHER TYPES:
+    Igneous: incinerations.
+    Sedimentary: petrifications.
+    Metamorphic: evolving Incinerations and Petrifications into something else.
+    Clear: Nothing Happens.
+
+WEATHER SETTINGS:
+    Forecast: when the weather is allowed to happen.
+        off: the weather does not occur.
+        cycle: only one cycle weather is active at a time, and it changes at fixed intervals.
+        endless: the weather is always on.
+    Rate: the chance of this weather's effect occurring every time it could be activated.
+    Locations: channels this weather can be activated.
