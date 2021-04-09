@@ -6,12 +6,17 @@ const token = process.env.TOKEN;
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
-const commandFiles = fs.readdirSync('./code/commands').filter(file => file.endsWith('.js'));
+const commandFolders = fs.readdirSync('./code/commands').filter(file => file.endsWith('.js'));
 
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    client.commands.set(command.name, command);
+for (const folder of commandFolders) {
+    const commandFiles = fs.readdirSync(`./code/commands/${folder}`)
+    for (const file of commandFiles) {
+        const command = require(`./commands/${file}`);
+        client.commands.set(command.name, command);
+    }
 }
+
+client.cooldowns = new Discord.Collection();
 
 //send console alert & set status once ready
 client.once('ready', () => {
@@ -24,12 +29,50 @@ client.on('message', message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return; //might need to look at the bot clause in case it confuses pluralkit - can poke Astrid about how PK specifically works?
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
-    const command = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase();
 
-    if (!client.commands.has(command)) return;
+    if (!client.commands.has(commandName)) return;
 
+    const command = client.commands.get(commandName);
+    
+    if(command.guildOnly && message.channel.type === 'dm') {
+        return message.reply("This command can only be used in servers!");
+    }
+
+    //handling for commands that do not have arguments
+    if(command.args && !args.length) {
+        let reply = `This command requires some arguments!`;
+        if (command.usage) {
+            reply += `\nThe proper usage is: \`${prefix}${command.name} ${command.usage}\``;
+        }
+        return message.channel.send(reply);
+    }
+    
+    //cooldowns
+    const { cooldowns } = client;
+    if(!cooldowns.has(command.name)) {
+        cooldowns.set(command.name, new Discord.Collection());
+    }
+
+    const now = Date.now();
+    const timestamps = cooldowns.get(command.name);
+    const cooldownAmount = (command.cooldown || 3) * 1000;
+
+    if(timestamps.has(message.author.id)) {
+        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
+
+        if(now < expirationTime) {
+            const timeLeft = (expirationTime - now) / 1000;
+            return message.reply(`You cannot send this command again for ${timeLeft.toFixed(1)} more seconds!`);
+        }
+        timestamps.set(message.author.id, now);
+        setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
+    }
+
+    
+    //attempt to execute the command.
     try {
-        client.commands.get(command).execute(message, args);
+        command.execute(message, args);
     } catch (error) {
         console.error(error);
         message.reply('there was an error trying to execute that command!');
