@@ -17,7 +17,7 @@ module.exports = {
             data.push(commands.map(command => command.name).join(', '));
             data.push(`\nUse \`${prefix}${this.name} ${this.usage}\` to get info on a specific command!`);
 
-            return message.reply(data, {split: true});
+            return message.channel.send(data, {split: true});
         }
 
         //specific asks
