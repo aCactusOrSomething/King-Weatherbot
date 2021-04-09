@@ -36,8 +36,18 @@ client.on('message', message => {
 
     const command = client.commands.get(commandName);
     
+
+    //lock to discord servers and not DMs.
     if(command.guildOnly && message.channel.type === 'dm') {
         return message.reply("This command can only be used in servers!");
+    }
+
+    //restrict to users with the right permissions
+    if(command.permissions) {
+        const authorPerms = message.channel.permissionsFor(message.author);
+        if(!authorPerms || !authorPerms.has(command.permissions)) {
+            return message.reply(`This command is restricted based on your permissions!`);
+        }
     }
 
     //handling for commands that do not have arguments

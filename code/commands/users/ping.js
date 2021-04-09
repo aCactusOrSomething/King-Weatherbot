@@ -7,6 +7,7 @@ module.exports = {
     guildOnly: false, //set to true if this command is locked to guilds
     cooldown: 5, //cooldown time in seconds before this user can use this command again
     aliases: ['pong', 'test'], //alternate names that work when using this command
+    //permissions: 'KICK_MEMBERS', //restricts command to set users with specific permissions
 
     execute(message, args) {
         message.channel.send('Pong.');
