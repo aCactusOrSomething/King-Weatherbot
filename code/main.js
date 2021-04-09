@@ -6,10 +6,10 @@ const token = process.env.TOKEN;
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
-const commandFolders = fs.readdirSync('./code/commands').filter(file => file.endsWith('.js'));
+const commandFolders = fs.readdirSync('./code/commands');
 
 for (const folder of commandFolders) {
-    const commandFiles = fs.readdirSync(`./code/commands/${folder}`)
+    const commandFiles = fs.readdirSync(`./code/commands/${folder}`).filter(file => file.endsWith('.js'));
     for (const file of commandFiles) {
         const command = require(`./commands/${file}`);
         client.commands.set(command.name, command);
