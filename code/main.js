@@ -30,11 +30,9 @@ client.once('ready', () => {
 });
 
 //listen for messages
-client.on('message', message => {
-    getSettings(message).then(settings => {
-        console.log(settings);
-        commandHandler(message, settings);    
-    });
+client.on('message', async message => {
+    const settings = await getSettings(message);
+    commandHandler(message, settings);
 });
 
 //log in!
@@ -122,13 +120,13 @@ function commandHandler(message, guildSettings) {
 //returns the settings for the guild a message is sent in. 
 //if a guild DOESNT have settings, it will make them & comment about it.
 //TODO: its very important to update missing settings
-function getSettings(message) {
+async function getSettings(message) {
     const guild = message.guild;
     var ret = null;
     if(guild.available) {
         const id = guild.id;
 
-        db.get(id).then(value => {
+        const value = await db.get(id);
             //1. get the settings
             if(value === null) { //you're none settings? so like. you dont have any settings???
                 console.log(`couldn't find settings for server ID ${id}`);
@@ -137,7 +135,6 @@ function getSettings(message) {
                 db.set(id,defJson);
             } else {
                 ret = JSON.parse(value);
-                //console.log(value);
             }
 
             //2. update with any missing settings
@@ -149,7 +146,7 @@ function getSettings(message) {
 
             //3. return the settings
             return ret;
-        });
+        
     } else {
         return defaultSettings;
     }
