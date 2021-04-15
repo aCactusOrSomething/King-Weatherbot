@@ -31,7 +31,7 @@ client.once('ready', () => {
 
 //listen for messages
 client.on('message', message => {
-    const settings = getSettings(message);
+    const settings = await getSettings(message);
     console.log(settings);
     commandHandler(message, settings);
 });
@@ -121,7 +121,7 @@ function commandHandler(message, guildSettings) {
 //returns the settings for the guild a message is sent in. 
 //if a guild DOESNT have settings, it will make them & comment about it.
 //TODO: its very important to update missing settings
-function getSettings(message) {
+async function getSettings(message) {
     const guild = message.guild;
     var ret = null;
     if(guild.available) {
