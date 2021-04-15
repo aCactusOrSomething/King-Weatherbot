@@ -19,7 +19,7 @@ function printSettings(base, layers) {
     var ret = '';
     for(const key in base) {
         ret += `\n`;
-        for(var i = 0; i < layers; i++) ret += " ";
+        for(var i = 0; i < layers; i++) ret += "   ";
         ret += `${key}: `;
         //recurse to cover nested objects
         if(typeof base[key] === "object") {
