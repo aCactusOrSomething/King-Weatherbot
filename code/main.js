@@ -32,6 +32,7 @@ client.once('ready', () => {
 //listen for messages
 client.on('message', message => {
     const settings = getSettings(message);
+    console.log(settings);
     commandHandler(message, settings);
 });
 
@@ -135,7 +136,7 @@ function getSettings(message) {
                 db.set(id,defJson);
             } else {
                 ret = JSON.parse(value);
-                console.log(value);
+                //console.log(value);
             }
 
             //2. update with any missing settings
