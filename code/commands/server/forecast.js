@@ -22,7 +22,7 @@ module.exports = {
         //message.channel.send('Pong.');
 
         if(args.length != 2) {
-            message.channel.send(`Arguments are wrong. Proper arguments are \`${usage}\``);
+            message.channel.send(`Arguments are wrong. Proper arguments are \`<weather> <forecast>\``);
             return false;
         }
         
