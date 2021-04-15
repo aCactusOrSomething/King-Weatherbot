@@ -22,23 +22,24 @@ module.exports = {
         //message.channel.send('Pong.');
 
         if(args.length != 2) {
-            //handling for invalid arg lengths
+            message.channel.send(`Arguments are wrong. Proper arguments are \`${usage}\``);
             return false;
         }
         
         if(guildSettings.weathers[args[0]] === undefined) {
-            //handling for weather that isn't real
+            message.channel.send(`That weather does not exist!`);
             return false;
         }
 
         if(!forecasts.includes(args[1])) {
-            //handling for forecasts that aren't real
+            message.channel.send(`that is not a valid weather forecast! the options are: ${forecasts}`);
             return false;
         }
 
         const guild = message.guild;
         if(!guild.available) {
-            //handling for no guild available
+            message.channel.send("oops. i can't access the server. :(")
+            return false;
         }
         const id = guild.id;
 
