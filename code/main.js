@@ -59,34 +59,34 @@ function commandHandler(message, guildSettings) {
 
     const command = client.commands.get(commandName)
         || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-    
-    if(!command) return;
+
+    if (!command) return;
 
     //lock to discord servers and not DMs.
-    if(command.guildOnly && message.channel.type === 'dm') {
+    if (command.guildOnly && message.channel.type === 'dm') {
         return message.reply("This command can only be used in servers!");
     }
 
     //restrict to users with the right permissions
-    if(command.permissions) {
+    if (command.permissions) {
         const authorPerms = message.channel.permissionsFor(message.author);
-        if(!authorPerms || !authorPerms.has(command.permissions)) {
+        if (!authorPerms || !authorPerms.has(command.permissions)) {
             return message.reply(`This command is restricted based on your permissions!`);
         }
     }
 
     //handling for commands that do not have arguments
-    if(command.args && !args.length) {
+    if (command.args && !args.length) {
         let reply = `This command requires some arguments!`;
         if (command.usage) {
             reply += `\nThe proper usage is: \`${prefix}${command.name} ${command.usage}\``;
         }
         return message.channel.send(reply);
     }
-    
+
     //cooldowns
     const { cooldowns } = client;
-    if(!cooldowns.has(command.name)) {
+    if (!cooldowns.has(command.name)) {
         cooldowns.set(command.name, new Discord.Collection());
     }
 
@@ -94,10 +94,10 @@ function commandHandler(message, guildSettings) {
     const timestamps = cooldowns.get(command.name);
     const cooldownAmount = (command.cooldown || 3) * 1000;
 
-    if(timestamps.has(message.author.id)) {
+    if (timestamps.has(message.author.id)) {
         const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
-        if(now < expirationTime) {
+        if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
             return message.reply(`You cannot send this command again for ${timeLeft.toFixed(1)} more seconds!`);
         }
@@ -105,7 +105,7 @@ function commandHandler(message, guildSettings) {
         setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
     }
 
-    
+
     //attempt to execute the command.
     try {
         command.execute(message, args, guildSettings);
@@ -123,30 +123,30 @@ function commandHandler(message, guildSettings) {
 async function getSettings(message) {
     const guild = message.guild;
     var ret = null;
-    if(guild.available) {
+    if (guild.available) {
         const id = guild.id;
 
         const value = await db.get(id);
-            //1. get the settings
-            if(value === null) { //you're none settings? so like. you dont have any settings???
-                console.log(`couldn't find settings for server ID ${id}`);
-                ret = defaultSettings;
-                var defJson = JSON.stringify(defaultSettings);
-                db.set(id,defJson);
-            } else {
-                ret = JSON.parse(value);
-            }
+        //1. get the settings
+        if (value === null) { //you're none settings? so like. you dont have any settings???
+            console.log(`couldn't find settings for server ID ${id}`);
+            ret = defaultSettings;
+            var defJson = JSON.stringify(defaultSettings);
+            db.set(id, defJson);
+        } else {
+            ret = JSON.parse(value);
+        }
 
-            //2. update with any missing settings
-            var changes = upgradeSettings(ret, defaultSettings);
-            if(changes > 0) {
-                var retJson = JSON.stringify(ret);
-                db.set(id,retJson);
-            }
+        //2. update with any missing settings
+        var changes = upgradeSettings(ret, defaultSettings);
+        if (changes > 0) {
+            var retJson = JSON.stringify(ret);
+            db.set(id, retJson);
+        }
 
-            //3. return the settings
-            return ret;
-        
+        //3. return the settings
+        return ret;
+
     } else {
         return defaultSettings;
     }
@@ -155,14 +155,14 @@ async function getSettings(message) {
 //compares an object to a default template, adding any missing keys.
 function upgradeSettings(base, template) {
     var changes = 0;
-    for(const key in template) {
-        if(base[key] === undefined) {
+    for (const key in template) {
+        if (base[key] === undefined) {
             console.log(`adding ${key} to someone's settings.`);
             base[key] = template[key];
             changes++;
         }
         //recurse to cover nested objects
-        if(typeof template[key] === "object") {
+        if (typeof template[key] === "object") {
             changes += upgradeSettings(base[key], template[key]);
         }
     }

@@ -10,15 +10,17 @@ module.exports = {
 
     execute(message, args, guildSettings) {
         var ret = '**SETTINGS:**';
-        ret += printSettings(guildSettings);
+        ret += printSettings(guildSettings, 0);
         message.channel.send(ret);
     },
 };
 
-function printSettings(base) {
+function printSettings(base, layers) {
     var ret = '';
     for(const key in base) {
-        ret += `\n${key}: `;
+        ret += `\n`;
+        for(var i = 0; i < layers; i++) ret += " ";
+        ret += `${key}: `;
         //recurse to cover nested objects
         if(typeof base[key] === "object") {
             ret += `${printSettings(base[key])}`;
