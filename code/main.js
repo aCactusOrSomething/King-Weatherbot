@@ -119,6 +119,7 @@ function commandHandler(message, settings) {
 
 //returns the settings for the guild a message is sent in. 
 //if a guild DOESNT have settings, it will make them & comment about it.
+//TODO: its very important to update missing settings
 function getSettings(message) {
     const guild = message.guild;
     var ret = null;
@@ -126,18 +127,45 @@ function getSettings(message) {
         const id = guild.id;
 
         db.get(id).then(value => {
+            //1. get the settings
             if(value === null) { //you're none settings? so like. you dont have any settings???
                 console.log(`couldn't find settings for server ID ${id}`);
-                var defJson = JSON.stringify(defaultSettings);
                 ret = defaultSettings;
+                var defJson = JSON.stringify(defaultSettings);
                 db.set(id,defJson);
             } else {
                 ret = JSON.parse(value);
                 console.log(value);
             }
+
+            //2. update with any missing settings
+            var changes = upgradeSettings(ret, defaultSettings);
+            if(changes > 0) {
+                var retJson = JSON.stringify(ret);
+                db.set(id,retJson);
+            }
+
+            //3. return the settings
             return ret;
         });
     } else {
         return defaultSettings;
     }
+}
+
+//compares an object to a default template, adding any missing keys.
+function upgradeSettings(base, template) {
+    var changes = 0;
+    for(const key in template) {
+        if(base[key] === null) {
+            console.log(`adding ${key} to someone's settings.`);
+            base[key] = template[key];
+            changes++;
+        }
+        //recurse to cover nested objects
+        if(typeof template[key] === "object") {
+            changes += upgradeSettings(base[key], template[key]);
+        }
+    }
+    return changes;
 }
