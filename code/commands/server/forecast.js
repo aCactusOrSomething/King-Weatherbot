@@ -26,7 +26,7 @@ module.exports = {
             return false;
         }
         
-        if(!guildSettings.weathers.includes(args[0])) {
+        if(guildSettings.weathers[args[0]] === undefined) {
             //handling for weather that isn't real
             return false;
         }
