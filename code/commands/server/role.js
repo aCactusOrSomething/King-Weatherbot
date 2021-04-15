@@ -37,7 +37,7 @@ module.exports = {
             message.channel.send(`Error: I was unable to find the role ${args[1]}.`)
         }
 
-        message.channel.send(`changing the **${args[0]}** role from **${guildSettings.weathers[args[0]].role.name}** to **${args[1]}**`);
+        message.channel.send(`changing the **${args[0]}** role to **${args[1]}**`);
         guildSettings.weathers[args[0]].role = role;
 
         //update db
