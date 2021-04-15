@@ -1,6 +1,8 @@
 const Database = require("@replit/database");
 const db = new Database();
 
+const blacklistedSettings = ["umbrellaHolders"];
+
 module.exports = {
     name: 'settings',
     description: 'UNFINISHED: View the configurations for this server.',
@@ -17,15 +19,17 @@ module.exports = {
 
 function printSettings(base, layers) {
     var ret = '';
-    for(const key in base) {
-        ret += `\n`;
-        for(var i = 0; i < layers; i++) ret += "   ";
-        ret += `${key}: `;
-        //recurse to cover nested objects
-        if(typeof base[key] === "object") {
-            ret += `${printSettings(base[key], layers + 1)}`;
-        } else {
-            ret += base[key];
+    for (const key in base) {
+        if (!blacklistedSettings.includes(key)) {
+            ret += `\n`;
+            for (var i = 0; i < layers; i++) ret += "   ";
+            ret += `${key}: `;
+            //recurse to cover nested objects
+            if (typeof base[key] === "object") {
+                ret += `${printSettings(base[key], layers + 1)}`;
+            } else {
+                ret += base[key];
+            }
         }
     }
     return ret;
