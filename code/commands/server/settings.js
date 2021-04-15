@@ -23,7 +23,7 @@ function printSettings(base, layers) {
         ret += `${key}: `;
         //recurse to cover nested objects
         if(typeof base[key] === "object") {
-            ret += `${printSettings(base[key])}`;
+            ret += `${printSettings(base[key], layers + 1)}`;
         } else {
             ret += base[key];
         }
