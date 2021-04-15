@@ -38,7 +38,7 @@ module.exports = {
         }
 
         message.channel.send(`changing the **${args[0]}** role to **${args[1]}**`);
-        guildSettings.weathers[args[0]].role = role;
+        guildSettings.weathers[args[0]].role = role.id;
 
         //update db
         var retJson = JSON.stringify(guildSettings);
