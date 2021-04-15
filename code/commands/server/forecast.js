@@ -26,7 +26,7 @@ module.exports = {
             return false;
         }
         
-        if(!guildSettings.weather.includes(args[0])) {
+        if(!guildSettings.weathers.includes(args[0])) {
             //handling for weather that isn't real
             return false;
         }
@@ -42,8 +42,8 @@ module.exports = {
         }
         const id = guild.id;
 
-        message.channel.send(`Changing the **${args[0]}** forecast from **${guildSettings.weather[args[0]]}** to **${args[1]}**`);
-        guildSettings.weather[args[0]].forecast = args[1];
+        message.channel.send(`Changing the **${args[0]}** forecast from **${guildSettings.weathers[args[0]]}** to **${args[1]}**`);
+        guildSettings.weathers[args[0]].forecast = args[1];
 
         //update db
         var retJson = JSON.stringify(guildSettings);
