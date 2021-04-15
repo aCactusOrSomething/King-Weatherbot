@@ -58,7 +58,7 @@ function commandHandler(message, guildSettings) {
     if (!client.commands.has(commandName)) return;
 
     const command = client.commands.get(commandName)
-        || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+        || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName)); //todo this isn't working for some reason
 
     if (!command) return;
 
