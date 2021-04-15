@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/aCactusOrSomething/King-Weatherbot#readme",
   "dependencies": {
+    "@replit/database": "^2.0.1",
     "discord.js": "^12.5.1"
   }
 }
