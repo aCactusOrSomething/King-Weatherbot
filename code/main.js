@@ -1,6 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const { prefix } = require('./config.json');
+const defaultSettings = require('./defaultSettings.json');
 
 const token = process.env.TOKEN;
 const client = new Discord.Client();
@@ -17,6 +18,9 @@ for (const folder of commandFolders) {
     }
 }
 
+const Database = require("@replit/database");
+const db = new Database();
+
 client.cooldowns = new Discord.Collection();
 
 //send console alert & set status once ready
@@ -27,7 +31,26 @@ client.once('ready', () => {
 
 //listen for messages
 client.on('message', message => {
-    if (!message.content.startsWith(prefix) || message.author.bot) return; //might need to look at the bot clause in case it confuses pluralkit - can poke Astrid about how PK specifically works?
+    const settings = getSettings(message);
+    commandHandler(message, settings);
+});
+
+//log in!
+client.login(token);
+
+//build info website
+const http = require('http');
+const server = http.createServer((req, res) => {
+    res.writeHead(200);
+    res.end(`My invite link is: https://discord.com/oauth2/authorize?client_id=829469503762595871&scope=bot \nFor every message sent in your server, I may decide to Incinerate the sender. \nIf you create a role labelled "Incinerated" (with the first letter capitalized), and give me permission to manage roles, I will apply it to any user I incinerate. (This also makes incineration permanent - I cannot incinerate someone with the Incinerated role). \nIf you have questions please direct them to discord user @heroguy15#9469 !\nHave fun!~\n\nCREDIT:\nDelapouite of Game-Icons.net: Icon, Licensed under https://creativecommons.org/licenses/by/3.0/\nThe Game Band: Inspiration, and Blaseball.com\nBoston Flowers Captains: Development`);
+});
+server.listen(3000);
+
+//this parses commands. it returns "true" if the user attempted a command (even if the command was invalid), and false otherwise.
+function commandHandler(message, settings) {
+    if (!message.content.startsWith(prefix) || message.author.bot) return false;
+    //might need to look at the bot clause in case it confuses pluralkit - can poke Astrid about how PK specifically works?
+    //ok the PK FAQ helped a bunch. it uses webhooks, which i think count as bot commands. really more an issue for weather than commands.
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
     const commandName = args.shift().toLowerCase();
@@ -90,15 +113,31 @@ client.on('message', message => {
         console.error(error);
         message.reply('there was an error trying to execute that command!');
     }
-});
+    return true;
+}
 
-//log in!
-client.login(token);
 
-//build info website
-const http = require('http');
-const server = http.createServer((req, res) => {
-    res.writeHead(200);
-    res.end(`My invite link is: https://discord.com/oauth2/authorize?client_id=829469503762595871&scope=bot \nFor every message sent in your server, I may decide to Incinerate the sender. \nIf you create a role labelled "Incinerated" (with the first letter capitalized), and give me permission to manage roles, I will apply it to any user I incinerate. (This also makes incineration permanent - I cannot incinerate someone with the Incinerated role). \nIf you have questions please direct them to discord user @heroguy15#9469 !\nHave fun!~\n\nCREDIT:\nDelapouite of Game-Icons.net: Icon, Licensed under https://creativecommons.org/licenses/by/3.0/\nThe Game Band: Inspiration, and Blaseball.com\nBoston Flowers Captains: Development`);
-});
-server.listen(3000);
+//returns the settings for the guild a message is sent in. 
+//if a guild DOESNT have settings, it will make them & comment about it.
+function getSettings(message) {
+    const guild = message.guild;
+    var ret = null;
+    if(guild.available) {
+        const id = guild.id;
+
+        db.get(id).then(value => {
+            if(value === null) { //you're none settings? so like. you dont have any settings???
+                console.log(`couldn't find settings for server ID ${id}`);
+                var defJson = JSON.stringify(defaultSettings);
+                ret = defaultSettings;
+                db.set(id,defJson);
+            } else {
+                ret = JSON.parse(value);
+                console.log(value);
+            }
+            return ret;
+        });
+    } else {
+        return defaultSettings;
+    }
+}

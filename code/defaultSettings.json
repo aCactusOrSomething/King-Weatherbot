@@ -1,0 +1,22 @@
+{
+    "weathers": {
+        "igneous": {
+            "forecast": "off",
+            "rate": 0.05,
+            "locations": [],
+            "role": null
+        },
+        "sedimentary": {
+            "forecast": "off",
+            "rate": 0.05,
+            "locations": [],
+            "role": null
+        },
+        "metamorphic": {
+            "forecast": "off",
+            "rate": 0.05,
+            "locations": [],
+            "role": null
+        }
+    }
+}
