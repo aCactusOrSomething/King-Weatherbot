@@ -42,7 +42,7 @@ module.exports = {
         }
         const id = guild.id;
 
-        message.channel.send(`Changing the **${args[0]}** forecast from **${guildSettings.weathers[args[0]]}** to **${args[1]}**`);
+        message.channel.send(`Changing the **${args[0]}** forecast from **${guildSettings.weathers[args[0]].forecast}** to **${args[1]}**`);
         guildSettings.weathers[args[0]].forecast = args[1];
 
         //update db
