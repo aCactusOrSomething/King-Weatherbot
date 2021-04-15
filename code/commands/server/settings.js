@@ -1,12 +1,8 @@
-const Database = require("@replit/database");
-const db = new Database();
-
 const blacklistedSettings = ["umbrellaHolders"];
 
 module.exports = {
     name: 'settings',
-    description: 'UNFINISHED: View the configurations for this server.',
-    usage: '<argA> <argB>',
+    description: 'View the configurations for this server.',
 
     guildOnly: true,
 
