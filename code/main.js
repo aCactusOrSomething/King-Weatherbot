@@ -157,7 +157,7 @@ function getSettings(message) {
 function upgradeSettings(base, template) {
     var changes = 0;
     for(const key in template) {
-        if(base[key] === null) {
+        if(base[key] === undefined) {
             console.log(`adding ${key} to someone's settings.`);
             base[key] = template[key];
             changes++;
