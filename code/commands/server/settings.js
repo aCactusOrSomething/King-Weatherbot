@@ -1,4 +1,5 @@
 const Database = require("@replit/database");
+const db = new Database();
 
 module.exports = {
     name: 'settings',
@@ -7,7 +8,23 @@ module.exports = {
 
     guildOnly: true,
 
-    execute(message, args) {
-        message.channel.send('Pong.');
+    execute(message, args, guildSettings) {
+        var ret = '**SETTINGS:**';
+        ret += printSettings(guildSettings);
+        message.channel.send(ret);
     },
 };
+
+function printSettings(base) {
+    var ret = '';
+    for(const key in base) {
+        ret += `\n${key}: `;
+        //recurse to cover nested objects
+        if(typeof base[key] === "object") {
+            ret += `${printSettings(base[key])}`;
+        } else {
+            ret += base[key];
+        }
+    }
+    return ret;
+}

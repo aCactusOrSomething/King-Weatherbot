@@ -9,7 +9,7 @@ module.exports = {
     aliases: ['pong', 'test'], //alternate names that work when using this command
     //permissions: 'KICK_MEMBERS', //restricts command to set users with specific permissions
 
-    execute(message, args) {
+    execute(message, args, guildSettings) {
         message.channel.send('Pong.');
     },
 };

@@ -47,7 +47,7 @@ const server = http.createServer((req, res) => {
 server.listen(3000);
 
 //this parses commands. it returns "true" if the user attempted a command (even if the command was invalid), and false otherwise.
-function commandHandler(message, settings) {
+function commandHandler(message, guildSettings) {
     if (!message.content.startsWith(prefix) || message.author.bot) return false;
     //might need to look at the bot clause in case it confuses pluralkit - can poke Astrid about how PK specifically works?
     //ok the PK FAQ helped a bunch. it uses webhooks, which i think count as bot commands. really more an issue for weather than commands.
@@ -108,7 +108,7 @@ function commandHandler(message, settings) {
     
     //attempt to execute the command.
     try {
-        command.execute(message, args);
+        command.execute(message, args, guildSettings);
     } catch (error) {
         console.error(error);
         message.reply('there was an error trying to execute that command!');
