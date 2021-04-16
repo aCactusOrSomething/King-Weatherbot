@@ -27,7 +27,7 @@ function transcribe(author, message) {
     const ret = new Discord.MessageEmbed()
 	.setColor('#CC6600')
 	.setTitle('Survey Response')
-	.setAuthor(author.username, author.defaultAvatarURL, message.url)
+	.setAuthor(author.username, author.avatarURL(), message.url)
 	.setDescription(message.content)
     .setFooter('1 igneous rock delivered.')
 	.setTimestamp();
