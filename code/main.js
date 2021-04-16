@@ -64,12 +64,13 @@ function weatherHandler(message, settings) {
         const mySettings = settings.weathers[weather];
         if (mySettings.locations.includes(message.channel.id)) {
             if (mySettings.forecast) {
+                console.log("rock giving possible");
                 var myChance = Math.random();
                 if (myChance <= mySettings.rate) {
                     const effectHandler = client.weathers.get(weather);
                     //attempt to execute the command.
                     try {
-                        effectHandler.execute(message, guildSettings);
+                        effectHandler.execute(message, settings);
                     } catch (error) {
                         console.error(error);
                         message.reply('there was an error trying to parse this response!');

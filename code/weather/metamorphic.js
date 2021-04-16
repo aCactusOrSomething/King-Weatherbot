@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 module.exports = {
     name: 'metamorphic', //name displayed in help text
     description: 'Formed through the cooling and solidification of magma or lava.', //description displayed in help text
@@ -5,20 +6,21 @@ module.exports = {
     cooldown: 5, //cooldown time in seconds before this user can use this command again
 
     execute(message, guildSettings) {
-        const target = message.author;
-        const settings = guildSettings.weathers.igneous;
+        const target = message.member;
+        const settings = guildSettings.weathers.metamorphic;
         const wall = message.guild.channels.resolve(guildSettings.rockwall);
 
-        const rock = message.guild.roles.fetch(settings.role);
-        
+        const rock = settings.role;
+        //console.log(rock);
+
         const otherRocks = [guildSettings.weathers.igneous.role, guildSettings.weathers.sedimentary.role];
 
-        if (target.roles.cache.some(role  === otherRocks[0]) || target.roles.cache.some(role  === otherRocks[1])) {
+        if (message.member.roles.cache.find(role => role.id  === otherRocks[0]) || message.member.roles.cache.find(role => role.id  === otherRocks[1])) {
             target.roles.add(rock);
-            target.removeRole(otherRocks[0]).catch();
-            target.removeRole(otherRocks[1]).catch();
+            target.roles.remove(otherRocks[0]).catch();
+            target.roles.remove(otherRocks[1]).catch();
             message.reply('Thank you for your input! Your comments will be added to The Wall.\n*METAMORPHASIS: Your rocks have transformed!*');
-            wall.send(transcribe(target, message));
+            wall.send(transcribe(target.user, message));
         }
     },
 };

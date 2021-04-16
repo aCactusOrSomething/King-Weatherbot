@@ -26,11 +26,6 @@ module.exports = {
             return false;
         }
 
-        if(typeof args[1] !== "boolean") {
-            message.channel.send(`must be a true/false value for the forecast!`);
-            return false;
-        }
-
         const guild = message.guild;
         if(!guild.available) {
             message.channel.send("oops. i can't access the server. :(")
@@ -38,8 +33,16 @@ module.exports = {
         }
         const id = guild.id;
 
-        message.channel.send(`Changing the **${args[0]}** forecast from **${guildSettings.weathers[args[0]].forecast}** to **${args[1]}**`);
-        guildSettings.weathers[args[0]].forecast = args[1];
+        const val = args[1].toLowerCase();
+        var ret;
+        if(val == "true" || val == "t") {
+          ret = true;
+        } else {
+          ret = false;
+        }
+        
+        message.channel.send(`Changing the **${args[0]}** forecast from **${guildSettings.weathers[args[0]].forecast}** to **${ret}**`);
+        guildSettings.weathers[args[0]].forecast = ret;
 
         //update db
         var retJson = JSON.stringify(guildSettings);
