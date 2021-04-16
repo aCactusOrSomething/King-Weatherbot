@@ -35,6 +35,7 @@ module.exports = {
         const role = guild.roles.cache.find(role => role.name === args[1]);
         if(role === undefined) {
             message.channel.send(`Error: I was unable to find the role ${args[1]}.`)
+            return false;
         }
 
         message.channel.send(`changing the **${args[0]}** role to **${args[1]}**`);

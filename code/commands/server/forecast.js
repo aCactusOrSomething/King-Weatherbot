@@ -1,18 +1,13 @@
 const Database = require("@replit/database");
 const db = new Database();
 
-const forecasts = [
-    "off",
-    "cycle",
-    "endless"
-]; //todo move this to somewhere else
 
 module.exports = {
     name: 'forecast', //name displayed in help text
-    description: 'decide how, or if, a particular weather activates.', //description displayed in help text
+    description: 'decide if a particular weather activates.', //description displayed in help text
     
     args: true, //set to true if this command requires arguments
-    usage: '<weather> <forecast>\navailable forecasts:\n*off:* disables this weather.\n*cycle:* may become active or inactive at random.\n*endless:* the weather is always on.', //if you have args, list their names here.
+    usage: '<weather> <forecast>', //if you have args, list their names here.
     guildOnly: true, //set to true if this command is locked to guilds
     cooldown: 5, //cooldown time in seconds before this user can use this command again
     aliases: ['fc'], //alternate names that work when using this command
@@ -31,8 +26,8 @@ module.exports = {
             return false;
         }
 
-        if(!forecasts.includes(args[1])) {
-            message.channel.send(`that is not a valid weather forecast! the options are: ${forecasts}`);
+        if(typeof args[1] !== "boolean") {
+            message.channel.send(`must be a true/false value for the forecast!`);
             return false;
         }
 

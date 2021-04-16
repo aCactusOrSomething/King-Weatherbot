@@ -6,6 +6,7 @@ const defaultSettings = require('./defaultSettings.json');
 const token = process.env.TOKEN;
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
+client.weathers = new Discord.Collection();
 
 const commandFolders = fs.readdirSync('./code/commands');
 
@@ -16,6 +17,12 @@ for (const folder of commandFolders) {
         client.commands.set(command.name, command);
         console.log(command.name);
     }
+}
+
+const weatherFolder = fs.readdirSync('./code/weather');
+for (const file of weatherFolder) {
+    const weather = require(`./weather/${file}`);
+    client.weathers.set(weather.name, weather);
 }
 
 const Database = require("@replit/database");
@@ -32,7 +39,9 @@ client.once('ready', () => {
 //listen for messages
 client.on('message', async message => {
     const settings = await getSettings(message);
-    commandHandler(message, settings);
+    if (!commandHandler(message, settings)) {
+        weatherHandler(message, settings);
+    }
 });
 
 //log in!
@@ -45,6 +54,31 @@ const server = http.createServer((req, res) => {
     res.end(`My invite link is: https://discord.com/oauth2/authorize?client_id=829469503762595871&scope=bot \nFor every message sent in your server, I may decide to Incinerate the sender. \nIf you create a role labelled "Incinerated" (with the first letter capitalized), and give me permission to manage roles, I will apply it to any user I incinerate. (This also makes incineration permanent - I cannot incinerate someone with the Incinerated role). \nIf you have questions please direct them to discord user @heroguy15#9469 !\nHave fun!~\n\nCREDIT:\nDelapouite of Game-Icons.net: Icon, Licensed under https://creativecommons.org/licenses/by/3.0/\nThe Game Band: Inspiration, and Blaseball.com\nBoston Flowers Captains: Development`);
 });
 server.listen(3000);
+
+function weatherHandler(message, settings) {
+    if (message.author.bot) return false;
+
+
+
+    for (const weather in settings.weathers) {
+        const mySettings = settings.weathers[weather];
+        if (mySettings.locations.includes(message.channel.id)) {
+            if (mySettings.forecast) {
+                var myChance = Math.random();
+                if (myChance <= mySettings.rate) {
+                    const effectHandler = client.weathers.get(weather);
+                    //attempt to execute the command.
+                    try {
+                        effectHandler.execute(message, guildSettings);
+                    } catch (error) {
+                        console.error(error);
+                        message.reply('there was an error trying to parse this response!');
+                    }
+                }
+            }
+        }
+    }
+}
 
 //this parses commands. it returns "true" if the user attempted a command (even if the command was invalid), and false otherwise.
 function commandHandler(message, guildSettings) {

@@ -1,23 +1,24 @@
 {
     "weathers": {
         "igneous": {
-            "forecast": "off",
+            "forecast": false,
             "rate": 0.05,
             "locations": [],
             "role": null
         },
         "sedimentary": {
-            "forecast": "off",
+            "forecast": false,
             "rate": 0.05,
             "locations": [],
             "role": null
         },
         "metamorphic": {
-            "forecast": "off",
+            "forecast": false,
             "rate": 0.05,
             "locations": [],
             "role": null
         }
     },
-    "umbrellaHolders": []
+    "umbrellaHolders": [],
+    "rockwall": null
 }
