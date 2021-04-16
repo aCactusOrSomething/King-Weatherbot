@@ -27,7 +27,7 @@ module.exports = {
 
 function transcribe(author, message) {
     const ret = new Discord.MessageEmbed()
-	.setColor('#FF00FF')
+	.setColor('#9900CC')
 	.setTitle('Survey Response')
 	.setAuthor(author.username, author.defaultAvatarURL, message.url)
 	.setDescription(message.content)

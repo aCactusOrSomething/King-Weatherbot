@@ -23,7 +23,7 @@ module.exports = {
         const ignRole = await guild.roles.create({
             data: {
                 name: 'Igneous',
-                color: 'RED',
+                color: '#CC6600',
             },
             reason: 'CORY bot',
         }).catch(console.error);
@@ -31,7 +31,7 @@ module.exports = {
         const sedRole = await guild.roles.create({
             data: {
                 name: 'Sedimentary',
-                color: 'GREEN',
+                color: '#669900',
             },
             reason: 'CORY bot',
         }).catch(console.error);
@@ -39,7 +39,7 @@ module.exports = {
         const metRole = await guild.roles.create({
             data: {
                 name: 'Metamorphic',
-                color: 'BLUE',
+                color: '#9900CC',
             },
             reason: 'CORY bot',
         }).catch(console.error);
